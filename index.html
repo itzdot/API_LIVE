@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APILearn — Master APIs 0→100%</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #050815;
+  --surface: rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.09);
+  --border2: rgba(255,255,255,0.05);
+  --primary: #818cf8;
+  --primary-dim: rgba(129,140,248,0.18);
+  --success: #34d399; --error: #f87171; --warning: #fbbf24; --info: #7dd3fc;
+  --text: #e8eeff; --text-dim: rgba(232,238,255,0.6); --text-muted: rgba(232,238,255,0.28);
+  --get: #34d399; --post: #60a5fa; --put: #fbbf24; --patch: #a78bfa; --delete: #f87171;
+  --glass: rgba(255,255,255,0.04);
+  --glass-hover: rgba(255,255,255,0.07);
+  --grad: linear-gradient(135deg,#7c3aed,#3b82f6,#06b6d4);
+  --grad-text: linear-gradient(135deg,#a78bfa,#60a5fa,#34d399);
+  --font: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+}
+html[lang="fa"] { --font: 'Vazirmatn', system-ui, sans-serif; }
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;height:100vh;display:flex;flex-direction:column;overflow:hidden;position:relative}
+
+/* BACKGROUND ORBS */
+.orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.35;pointer-events:none;z-index:0;animation:floatOrb 20s ease-in-out infinite alternate}
+.orb1{width:700px;height:700px;background:radial-gradient(circle,#7c3aed55,transparent 70%);top:-300px;left:-200px;animation-duration:28s}
+.orb2{width:600px;height:600px;background:radial-gradient(circle,#3b82f655,transparent 70%);bottom:-200px;right:-100px;animation-duration:35s;animation-delay:-12s}
+.orb3{width:450px;height:450px;background:radial-gradient(circle,#06b6d455,transparent 70%);top:40%;left:35%;animation-duration:22s;animation-delay:-7s}
+@keyframes floatOrb{0%{transform:translate(0,0) scale(1)}100%{transform:translate(50px,40px) scale(1.12)}}
+header,.main-layout,.log-panel{position:relative;z-index:1}
+
+/* HEADER */
+header{background:rgba(5,8,21,0.75);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:16px;flex-shrink:0;z-index:100}
+.logo{font-size:18px;font-weight:700;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.5px;white-space:nowrap}
+nav{display:flex;gap:4px;flex:1}
+nav button{background:none;border:none;color:var(--text-dim);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s;display:flex;align-items:center;gap:6px;font-family:var(--font)}
+nav button:hover{background:var(--glass-hover);color:var(--text)}
+nav button.active{background:rgba(129,140,248,0.15);color:var(--primary);box-shadow:0 0 12px rgba(129,140,248,0.2)}
+.lang-toggle{display:flex;gap:4px;align-items:center}
+.lang-btn{background:none;border:1px solid var(--border);color:var(--text-muted);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s;font-family:var(--font)}
+.lang-btn.active{background:var(--primary-dim);border-color:var(--primary);color:var(--primary)}
+.lang-btn:hover:not(.active){border-color:var(--text-muted);color:var(--text)}
+.prog-wrap{display:flex;align-items:center;gap:8px;color:var(--text-dim);font-size:12px;white-space:nowrap}
+.prog-track{width:100px;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--grad);border-radius:3px;transition:width .4s ease}
+
+/* LAYOUT */
+.main-layout{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:240px;background:rgba(5,8,21,0.65);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-right:1px solid var(--border);overflow-y:auto;flex-shrink:0}
+html[lang="fa"] .sidebar{border-right:none;border-left:1px solid var(--border)}
+.sidebar-section{padding:12px 0}
+.sidebar-title{padding:4px 16px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:4px}
+.ch-item{display:flex;align-items:center;gap:10px;padding:7px 16px;cursor:pointer;border-left:2px solid transparent;transition:background .15s}
+html[lang="fa"] .ch-item{border-left:none;border-right:2px solid transparent}
+.ch-item:hover{background:var(--glass-hover)}
+.ch-item.active{background:rgba(129,140,248,0.1);border-left-color:var(--primary);color:var(--primary)}
+html[lang="fa"] .ch-item.active{border-left-color:transparent;border-right-color:var(--primary)}
+.ch-item.done .ch-num{background:var(--success);color:#000}
+.ch-num{width:22px;height:22px;border-radius:50%;background:var(--border);color:var(--text-dim);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ch-label{font-size:13px;line-height:1.3;flex:1}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;padding:28px 32px}
+.section{display:none}
+.section.active{display:block}
+
+/* LEARN */
+.chapter-content h1{font-size:26px;font-weight:700;margin-bottom:8px;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ch-meta{display:flex;gap:12px;margin-bottom:24px;color:var(--text-dim);font-size:12px}
+.chapter-content h2{font-size:18px;font-weight:600;margin:28px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border2);color:var(--text)}
+.chapter-content h3{font-size:15px;font-weight:600;margin:20px 0 8px;color:var(--info)}
+.chapter-content p{line-height:1.7;color:var(--text-dim);margin-bottom:12px}
+.chapter-content ul,.chapter-content ol{padding-left:20px;margin-bottom:12px}
+.chapter-content li{line-height:1.7;color:var(--text-dim);margin-bottom:4px}
+code{background:rgba(129,140,248,0.1);border:1px solid rgba(129,140,248,0.2);border-radius:4px;padding:1px 6px;font-family:var(--font-mono);font-size:13px;color:var(--info)}
+pre{background:rgba(0,0,0,0.45);border:1px solid var(--border);border-radius:10px;padding:16px;overflow-x:auto;margin:12px 0;position:relative}
+pre code{background:none;border:none;padding:0;font-size:13px;color:var(--text);line-height:1.6}
+.copy-btn{position:absolute;top:8px;right:8px;background:var(--glass);border:1px solid var(--border);color:var(--text-dim);padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;transition:all .15s}
+.copy-btn:hover{background:var(--primary-dim);color:var(--primary)}
+.tip{background:rgba(129,140,248,0.07);border:1px solid rgba(129,140,248,0.2);border-radius:10px;padding:14px 16px;margin:16px 0;display:flex;gap:10px;backdrop-filter:blur(8px)}
+.tip.warn{background:rgba(251,191,36,0.07);border-color:rgba(251,191,36,0.25)}
+.tip.ok{background:rgba(52,211,153,0.07);border-color:rgba(52,211,153,0.25)}
+.tip-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.tip p{margin:0;color:var(--text);font-size:13px;line-height:1.5}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.5px}
+.bg{background:rgba(52,211,153,.15);color:var(--get);border:1px solid rgba(52,211,153,.3)}
+.bp{background:rgba(96,165,250,.15);color:var(--post);border:1px solid rgba(96,165,250,.3)}
+.bu{background:rgba(251,191,36,.15);color:var(--put);border:1px solid rgba(251,191,36,.3)}
+.bpa{background:rgba(167,139,250,.15);color:var(--patch);border:1px solid rgba(167,139,250,.3)}
+.bd{background:rgba(248,113,113,.15);color:var(--delete);border:1px solid rgba(248,113,113,.3)}
+.ch-nav{display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);gap:12px}
+.btn{padding:9px 18px;border-radius:8px;border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:500;transition:all .2s;display:inline-flex;align-items:center;gap:6px;font-family:var(--font)}
+.btn-p{background:rgba(129,140,248,0.15);border-color:rgba(129,140,248,0.3);color:var(--primary)}
+.btn-p:hover{background:rgba(129,140,248,0.28);box-shadow:0 0 16px rgba(129,140,248,0.3)}
+.btn-s{background:var(--glass);color:var(--text-dim)}
+.btn-s:hover{background:var(--glass-hover);color:var(--text)}
+.btn-ok{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.3);color:var(--success)}
+.btn-ok:hover{background:rgba(52,211,153,.22)}
+tbl{width:100%;border-collapse:collapse;margin-bottom:16px}
+
+/* TESTER */
+.tester-grid{display:grid;grid-template-columns:1fr 260px;gap:16px}
+.tester-col{display:flex;flex-direction:column;gap:14px}
+.req-bar{display:flex;gap:8px;align-items:center}
+.method-sel{background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;min-width:100px;font-family:var(--font)}
+.url-inp{flex:1;background:rgba(0,0,0,0.3);backdrop-filter:blur(8px);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:8px;font-size:13px;font-family:var(--font-mono);transition:border-color .2s,box-shadow .2s}
+.url-inp:focus{outline:none;border-color:var(--primary);box-shadow:0 0 12px rgba(129,140,248,0.2)}
+.send-btn{background:linear-gradient(135deg,#7c3aed,#3b82f6);border:none;color:#fff;padding:9px 22px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;font-family:var(--font)}
+.send-btn:hover{opacity:.85;box-shadow:0 0 20px rgba(124,58,237,0.5)}
+.send-btn:disabled{opacity:.4;cursor:not-allowed}
+.tabs{display:flex;border-bottom:1px solid var(--border)}
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:var(--text-dim);padding:8px 16px;cursor:pointer;font-size:13px;font-weight:500;transition:all .15s;margin-bottom:-1px;font-family:var(--font)}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--primary);border-bottom-color:var(--primary)}
+.tab-pane{display:none;padding:14px 0}
+.tab-pane.active{display:block}
+.kv-editor{display:flex;flex-direction:column;gap:8px}
+.kv-row{display:flex;gap:8px;align-items:center}
+.kv-inp{flex:1;background:rgba(0,0,0,0.3);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:6px;font-size:12px;font-family:var(--font-mono)}
+.kv-inp:focus{outline:none;border-color:var(--primary)}
+.kv-inp::placeholder{color:var(--text-muted)}
+.kv-del{background:none;border:none;color:var(--text-muted);cursor:pointer;padding:4px;border-radius:4px;font-size:18px;line-height:1;transition:color .1s}
+.kv-del:hover{color:var(--error)}
+.add-row{background:none;border:1px dashed var(--border);color:var(--text-muted);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;transition:all .15s;align-self:flex-start;margin-top:4px;font-family:var(--font)}
+.add-row:hover{border-color:var(--primary);color:var(--primary)}
+.body-ta{width:100%;background:rgba(0,0,0,0.35);border:1px solid var(--border);color:var(--text);padding:12px;border-radius:8px;font-family:var(--font-mono);font-size:13px;line-height:1.5;resize:vertical;min-height:150px}
+.body-ta:focus{outline:none;border-color:var(--primary)}
+.auth-sel{background:rgba(0,0,0,0.3);border:1px solid var(--border);color:var(--text);padding:7px 10px;border-radius:6px;font-size:13px;width:100%;margin-bottom:10px;font-family:var(--font)}
+.field-lbl{font-size:12px;color:var(--text-dim);margin-bottom:5px;font-weight:500}
+
+/* RESPONSE */
+.res-panel{background:rgba(0,0,0,0.25);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.res-header{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border)}
+.s-badge{padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700}
+.s2{background:rgba(52,211,153,.15);color:var(--success);border:1px solid rgba(52,211,153,.3)}
+.s3{background:rgba(251,191,36,.15);color:var(--warning);border:1px solid rgba(251,191,36,.3)}
+.s4{background:rgba(248,113,113,.15);color:var(--error);border:1px solid rgba(248,113,113,.3)}
+.s5{background:rgba(248,113,113,.15);color:var(--error);border:1px solid rgba(248,113,113,.3)}
+.res-meta{color:var(--text-muted);font-size:12px}
+.res-body{padding:16px;font-family:var(--font-mono);font-size:12px;line-height:1.6;overflow-x:auto;white-space:pre-wrap;max-height:380px;overflow-y:auto}
+.res-ph{padding:40px;text-align:center;color:var(--text-muted)}
+
+/* EXAMPLES SIDEBAR */
+.ex-panel{background:rgba(0,0,0,0.25);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.ex-title{padding:10px 14px;font-size:12px;font-weight:600;color:var(--text-dim);background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.5px}
+.ex-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border2);transition:background .1s}
+.ex-item:hover{background:var(--glass-hover)}
+.ex-item:last-child{border-bottom:none}
+.ex-name{font-size:13px;color:var(--text);margin-bottom:2px;display:flex;align-items:center;gap:8px}
+.ex-url{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* LOG PANEL */
+.log-panel{height:220px;background:rgba(5,8,21,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;transition:height .2s ease}
+.log-panel.collapsed{height:36px}
+.log-hdr{display:flex;align-items:center;gap:8px;padding:0 12px;height:36px;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--border);flex-shrink:0;cursor:pointer;user-select:none}
+.log-title{font-size:12px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;flex:1}
+.log-badge{background:var(--primary-dim);color:var(--primary);border-radius:10px;padding:1px 7px;font-size:11px;font-weight:600}
+.log-ctrls{display:flex;gap:6px;align-items:center}
+.log-btn{background:none;border:none;color:var(--text-muted);cursor:pointer;padding:3px 8px;border-radius:4px;font-size:11px;transition:all .1s;font-family:var(--font)}
+.log-btn:hover{background:var(--glass);color:var(--text)}
+.log-entries{flex:1;overflow-y:auto;font-family:var(--font-mono)}
+.log-row{display:flex;align-items:center;gap:10px;padding:5px 12px;border-bottom:1px solid var(--border2);font-size:12px;cursor:pointer;transition:background .1s}
+.log-row:hover{background:var(--glass)}
+.log-t{color:var(--text-muted);width:70px;flex-shrink:0}
+.log-m{width:55px;text-align:center;border-radius:3px;padding:1px 0;font-size:11px;font-weight:700;flex-shrink:0}
+.log-u{flex:1;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.log-sc{width:40px;text-align:right;font-weight:600;flex-shrink:0}
+.log-dur{width:60px;text-align:right;color:var(--text-muted);flex-shrink:0}
+.log-detail{display:none;padding:8px 12px 12px;background:rgba(0,0,0,0.35);border-bottom:1px solid var(--border);font-size:11px;line-height:1.6}
+.log-detail.show{display:block}
+.log-detail pre{margin:4px 0;padding:8px;border-radius:4px;background:rgba(0,0,0,0.4);font-size:11px;max-height:120px;overflow-y:auto;white-space:pre-wrap}
+
+/* DOCS */
+.docs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:28px}
+.doc-card{background:rgba(255,255,255,0.03);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:12px;padding:20px;cursor:default;transition:border-color .2s,box-shadow .2s}
+.doc-card:hover{border-color:rgba(129,140,248,0.4);box-shadow:0 0 20px rgba(129,140,248,0.08)}
+.doc-card-icon{font-size:22px;margin-bottom:10px}
+.doc-card h3{font-size:15px;font-weight:600;margin-bottom:6px}
+.doc-card p{font-size:13px;color:var(--text-dim);line-height:1.5}
+.search-inp{background:rgba(0,0,0,0.3);backdrop-filter:blur(8px);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:10px;font-size:14px;width:100%;margin-bottom:24px;transition:border-color .2s,box-shadow .2s;font-family:var(--font)}
+.search-inp:focus{outline:none;border-color:var(--primary);box-shadow:0 0 16px rgba(129,140,248,0.2)}
+.search-inp::placeholder{color:var(--text-muted)}
+.section-hdr{margin-bottom:24px}
+.section-hdr h1{font-size:24px;font-weight:700;margin-bottom:6px}
+.section-hdr p{color:var(--text-dim);font-size:14px}
+.docs-cat-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:14px;margin-top:4px}
+
+/* SYNTAX */
+.jk{color:#7dd3fc}.js{color:#a5d6ff}.jn{color:#fbbf24}.jb{color:#f87171}.jnu{color:var(--text-muted)}
+
+/* MISC */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-muted)}
+.spinner{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .6s linear infinite;display:inline-block;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.page-title{font-size:26px;font-weight:700;margin-bottom:6px;background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-sub{color:var(--text-dim);font-size:14px;margin-bottom:24px}
+table.ref{width:100%;border-collapse:collapse;margin-top:12px;font-size:12px}
+table.ref td{padding:5px 8px;border-bottom:1px solid var(--border2)}
+table.ref td:first-child{color:var(--primary);font-family:var(--font-mono)}
+table.ref td:last-child{color:var(--text-muted)}
+/* Example groups */
+.ex-group-hdr{padding:5px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);background:rgba(0,0,0,0.2);border-bottom:1px solid var(--border2);border-top:1px solid var(--border2)}
+/* Doc card rich content */
+.doc-card pre{background:rgba(0,0,0,0.4);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;margin:8px 0;font-family:var(--font-mono);font-size:12px;overflow-x:auto;white-space:pre-wrap;line-height:1.5}
+.doc-card pre code{background:none;border:none;padding:0;color:var(--text);font-size:12px}
+.doc-card h4{font-size:12px;font-weight:700;color:var(--info);margin:14px 0 5px;text-transform:uppercase;letter-spacing:.4px}
+.doc-card ul{padding-left:16px;margin:6px 0}
+.doc-card li{font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:3px}
+.doc-card table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12px}
+.doc-card table td{padding:5px 8px;border-bottom:1px solid var(--border2);color:var(--text-dim)}
+.doc-card table td:first-child{color:var(--primary);font-family:var(--font-mono);white-space:nowrap}
+.doc-card.wide{grid-column:1/-1}
+/* Try buttons */
+.try-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border2)}
+.try-lbl{font-size:11px;color:var(--text-muted);align-self:center;white-space:nowrap}
+.try-btn{background:var(--glass);border:1px solid var(--border);color:var(--text-dim);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;transition:all .15s;font-family:var(--font);display:inline-flex;align-items:center;gap:4px}
+.try-btn:hover{background:var(--primary-dim);border-color:var(--primary);color:var(--primary)}
+/* Status colors in doc */
+.c2{color:var(--success);font-weight:600}.c4{color:var(--error);font-weight:600}.c3{color:var(--warning);font-weight:600}
+/* Doc section wide grid */
+.docs-grid-wide{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:28px}
+/* RTL text alignment */
+html[lang="fa"] .ch-nav{flex-direction:row-reverse}
+html[lang="fa"] .req-bar{direction:ltr}
+html[lang="fa"] .url-inp{direction:ltr;text-align:left}
+</style>
+</head>
+<body>
+
+<!-- Background Orbs -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<header>
+  <div class="logo">API<span>Learn</span></div>
+  <nav>
+    <button class="active" id="nav-learn" onclick="showSection('learn')">📚 <span data-t="nav_learn">Learn</span></button>
+    <button id="nav-tester" onclick="showSection('tester')">🧪 <span data-t="nav_tester">Live Tester</span></button>
+    <button id="nav-docs" onclick="showSection('docs')">📖 <span data-t="nav_docs">Docs</span></button>
+  </nav>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="lang-en" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" id="lang-fa" onclick="setLang('fa')">فا</button>
+  </div>
+  <div class="prog-wrap">
+    <span id="prog-text">0 / 12</span>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <span id="prog-pct">0%</span>
+  </div>
+</header>
+
+<div class="main-layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-section" id="sidebar-inner">
+      <div class="sidebar-title">Learning Path</div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="main-content">
+
+    <!-- LEARN -->
+    <div class="section active" id="section-learn">
+      <div id="chapter-content"></div>
+    </div>
+
+    <!-- TESTER -->
+    <div class="section" id="section-tester">
+      <div class="page-title">🧪 <span data-t="tester_title">Live API Tester</span></div>
+      <div class="page-sub" data-t="tester_sub">Build and fire HTTP requests. Responses appear below and in the log panel.</div>
+      <div class="tester-grid">
+        <div class="tester-col">
+          <div class="req-bar">
+            <select class="method-sel" id="req-method" onchange="updateMethodColor()">
+              <option>GET</option><option>POST</option><option>PUT</option>
+              <option>PATCH</option><option>DELETE</option><option>HEAD</option><option>OPTIONS</option>
+            </select>
+            <input class="url-inp" id="req-url" placeholder="https://jsonplaceholder.typicode.com/posts/1" onkeydown="if(event.key==='Enter')sendRequest()">
+            <button class="send-btn" id="send-btn" onclick="sendRequest()" data-t="send">Send ▶</button>
+          </div>
+
+          <div>
+            <div class="tabs">
+              <button class="tab-btn active" onclick="switchTab('params',this)">Params</button>
+              <button class="tab-btn" onclick="switchTab('headers',this)">Headers</button>
+              <button class="tab-btn" onclick="switchTab('body',this)">Body</button>
+              <button class="tab-btn" onclick="switchTab('auth',this)">Auth</button>
+            </div>
+            <div class="tab-pane active" id="tab-params">
+              <div class="kv-editor" id="params-ed"></div>
+              <button class="add-row" onclick="addKV('params-ed','key','value')">+ Add Param</button>
+            </div>
+            <div class="tab-pane" id="tab-headers">
+              <div class="kv-editor" id="headers-ed"></div>
+              <button class="add-row" onclick="addKV('headers-ed','Header-Name','value')">+ Add Header</button>
+            </div>
+            <div class="tab-pane" id="tab-body">
+              <textarea class="body-ta" id="req-body" placeholder='{"key": "value"}'></textarea>
+            </div>
+            <div class="tab-pane" id="tab-auth">
+              <div class="field-lbl">Auth Type</div>
+              <select class="auth-sel" id="auth-type" onchange="renderAuthFields()">
+                <option value="none">No Auth</option>
+                <option value="bearer">Bearer Token</option>
+                <option value="apikey">API Key Header</option>
+                <option value="basic">Basic Auth</option>
+              </select>
+              <div id="auth-fields"></div>
+            </div>
+          </div>
+
+          <div class="res-panel" id="res-panel">
+            <div class="res-ph" id="res-ph">
+              <div style="font-size:36px;margin-bottom:10px">📡</div>
+              <div>Send a request to see the response here</div>
+            </div>
+            <div id="res-content" style="display:none">
+              <div class="res-header">
+                <span class="s-badge" id="res-badge">—</span>
+                <span class="res-meta" id="res-time"></span>
+                <span class="res-meta" id="res-size"></span>
+                <div style="flex:1"></div>
+                <button class="btn btn-s" style="padding:4px 10px;font-size:12px" onclick="copyRes()">Copy</button>
+              </div>
+              <div class="tabs" style="padding:0 16px;background:var(--surface2);border-bottom:1px solid var(--border)">
+                <button class="tab-btn active" id="rt-body-btn" onclick="switchResTab('body')">Body</button>
+                <button class="tab-btn" id="rt-hdrs-btn" onclick="switchResTab('hdrs')">Headers</button>
+              </div>
+              <div class="res-body" id="rt-body"></div>
+              <div class="res-body" id="rt-hdrs" style="display:none"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXAMPLES SIDEBAR -->
+        <div>
+          <div class="ex-panel">
+            <div class="ex-title">Quick Examples</div>
+            <div id="ex-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCS -->
+    <div class="section" id="section-docs">
+      <div class="page-title">📖 <span data-t="docs_title">API Reference & Docs</span></div>
+      <div class="page-sub" data-t="docs_sub">Learning paths, public APIs to practice, and quick-reference cheatsheets.</div>
+      <input class="search-inp" type="text" id="doc-search" oninput="renderDocs(this.value)" data-t-placeholder="docs_search">
+      <div id="docs-body"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LOG PANEL -->
+<div class="log-panel" id="log-panel">
+  <div class="log-hdr" onclick="toggleLog()">
+    <span style="font-size:14px">📋</span>
+    <span class="log-title" data-t="log_title">Request Log</span>
+    <span class="log-badge" id="log-count">0</span>
+    <div class="log-ctrls" onclick="event.stopPropagation()">
+      <button class="log-btn" onclick="clearLogs()" data-t="log_clear">Clear</button>
+    </div>
+    <span id="log-chevron">▼</span>
+  </div>
+  <div class="log-entries" id="log-entries">
+    <div id="log-empty" style="padding:18px;text-align:center;color:var(--text-muted);font-size:12px" data-t="log_empty">No requests yet — send one from the tester or click a quick example.</div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────
+const S = {
+  chapter: 0,
+  progress: JSON.parse(localStorage.getItem('alp') || '{}'),
+  logs: [],
+  logOpen: true,
+  lang: localStorage.getItem('alp-lang') || 'en'
+};
+
+// ── TRANSLATIONS ────────────────────────────────────────
+const T = {
+  en: {
+    nav_learn: 'Learn', nav_tester: 'Live Tester', nav_docs: 'Docs',
+    tester_title: 'Live API Tester',
+    tester_sub: 'Build and fire HTTP requests. Responses appear below and in the log panel.',
+    docs_title: 'API Reference & Docs',
+    docs_sub: 'Learning paths, public APIs to practice, and quick-reference cheatsheets.',
+    docs_search: '🔍 Search docs...',
+    log_title: 'Request Log', log_clear: 'Clear',
+    log_empty: 'No requests yet — send one from the tester or click a quick example.',
+    sidebar_title: 'Learning Path',
+    send: 'Send ▶', sending: '⏳ Sending...',
+    btn_prev: '← Previous', btn_next: 'Next →', btn_done: '✓ Mark Complete',
+    ch_done_label: 'Completed ✓',
+    ex_title: 'Quick Examples',
+    try_label: '▶ Try:',
+    param_add: '+ Add Param', hdr_add: '+ Add Header',
+    auth_none: 'No Auth', auth_bearer: 'Bearer Token',
+    auth_apikey: 'API Key Header', auth_basic: 'Basic Auth',
+    res_copy: 'Copy', res_placeholder: 'Send a request to see the response here',
+  },
+  fa: {
+    nav_learn: 'یادگیری', nav_tester: 'تست زنده', nav_docs: 'مستندات',
+    tester_title: 'تستر زنده API',
+    tester_sub: 'درخواست HTTP بساز و بفرست. پاسخ‌ها در پایین و در پنل لاگ نمایش داده می‌شوند.',
+    docs_title: 'مرجع و مستندات API',
+    docs_sub: 'مسیر یادگیری، API های عمومی برای تمرین، و راهنمای سریع.',
+    docs_search: '🔍 جستجو در مستندات...',
+    log_title: 'لاگ درخواست‌ها', log_clear: 'پاک کردن',
+    log_empty: 'هنوز درخواستی نیست — از تستر یا مثال‌های سریع استفاده کنید.',
+    sidebar_title: 'مسیر یادگیری',
+    send: 'ارسال ▶', sending: '⏳ در حال ارسال...',
+    btn_prev: '→ قبلی', btn_next: 'بعدی ←', btn_done: '✓ علامت‌گذاری شد',
+    ch_done_label: 'تکمیل شد ✓',
+    ex_title: 'مثال‌های سریع',
+    try_label: '▶ امتحان:',
+    param_add: '+ افزودن پارامتر', hdr_add: '+ افزودن هدر',
+    auth_none: 'بدون احراز هویت', auth_bearer: 'توکن Bearer',
+    auth_apikey: 'کلید API در هدر', auth_basic: 'احراز ساده',
+    res_copy: 'کپی', res_placeholder: 'یک درخواست بفرست تا پاسخ اینجا نمایش داده شود',
+  }
+};
+
+function t(key) { return (T[S.lang] || T.en)[key] || T.en[key] || key; }
+
+function setLang(lang) {
+  S.lang = lang;
+  localStorage.setItem('alp-lang', lang);
+  document.documentElement.lang = lang;
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-fa').classList.toggle('active', lang === 'fa');
+  // Update all data-t elements
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    el.textContent = t(key);
+  });
+  document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+    el.placeholder = t(el.getAttribute('data-t-placeholder'));
+  });
+  // Re-render dynamic content
+  renderSidebar();
+  renderChapter(S.chapter);
+  renderExamples();
+  renderDocs(document.getElementById('doc-search').value);
+  updateProgress();
+}
+
+// ── CHAPTER DATA ───────────────────────────────────────
+const CHAPTERS = [
+  { id:0, title:'What is an API?', title_fa:'API چیست؟', level:'🟢 Beginner', time:'5 min', content:`
+<h1>🌐 What is an API?</h1>
+<div class="ch-meta"><span>🟢 Beginner</span><span>⏱ 5 min</span></div>
+<p><strong>API</strong> stands for <strong>Application Programming Interface</strong>. It's a set of rules that lets two pieces of software talk to each other.</p>
+<div class="tip"><span class="tip-icon">💡</span><p><strong>Analogy:</strong> An API is like a waiter at a restaurant. You (client) order from the menu (API), the waiter takes your request to the kitchen (server), and brings back your food (response). You never need to enter the kitchen.</p></div>
+<h2>Why APIs Exist</h2>
+<ul><li><strong>Abstraction</strong> — you don't need to know how it works internally</li><li><strong>Reusability</strong> — one API, many apps</li><li><strong>Security</strong> — controlled, structured access to data</li><li><strong>Integration</strong> — connect different systems together</li></ul>
+<h2>APIs Are Everywhere</h2>
+<ul><li>Login with Google → Google Auth API</li><li>Map on a website → Google Maps API</li><li>Pay online → Stripe API</li><li>Weather in an app → OpenWeather API</li><li>Post a tweet → Twitter/X API</li></ul>
+<h2>Types of APIs</h2>
+<h3>REST (Most Common)</h3><p>Uses HTTP methods and URLs. Returns JSON. This is what you'll master in this course.</p>
+<h3>GraphQL</h3><p>Query exactly the data you need. Created by Meta/Facebook.</p>
+<h3>SOAP</h3><p>Older XML-based. Still used in banking and enterprise systems.</p>
+<h3>WebSockets</h3><p>Real-time bidirectional. Used in chat apps, live games, dashboards.</p>
+<div class="tip ok"><span class="tip-icon">✅</span><p>This course focuses on <strong>REST APIs</strong> — the most widely used type. Once you master REST, the others come naturally.</p></div>
+`, content_fa:`
+<h1>🌐 API چیست؟</h1>
+<div class="ch-meta"><span>🟢 مبتدی</span><span>⏱ ۵ دقیقه</span></div>
+<p><strong>API</strong> مخفف <strong>رابط برنامه‌نویسی کاربردی</strong> است. مجموعه‌ای از قوانین که به دو نرم‌افزار اجازه می‌دهد با هم صحبت کنند.</p>
+<div class="tip"><span class="tip-icon">💡</span><p><strong>مثال:</strong> API مثل گارسون رستوران است. شما (کلاینت) از منو (API) سفارش می‌دهید، گارسون سفارش را به آشپزخانه (سرور) می‌برد و غذا (پاسخ) را برمی‌گرداند.</p></div>
+<h2>چرا API وجود دارد؟</h2>
+<ul><li><strong>انتزاع</strong> — نیازی نیست بدانی داخل چطور کار می‌کند</li><li><strong>قابلیت استفاده مجدد</strong> — یک API، چندین اپلیکیشن</li><li><strong>امنیت</strong> — دسترسی کنترل‌شده به داده‌ها</li><li><strong>یکپارچه‌سازی</strong> — اتصال سیستم‌های مختلف به هم</li></ul>
+<h2>API همه جاست</h2>
+<ul><li>ورود با گوگل → API احراز هویت گوگل</li><li>نقشه در وبسایت → Google Maps API</li><li>پرداخت آنلاین → Stripe API</li><li>آب‌وهوا در اپ → OpenWeather API</li></ul>
+<h2>انواع API</h2>
+<h3>REST (رایج‌ترین)</h3><p>از متدهای HTTP و URL استفاده می‌کند. JSON برمی‌گرداند. این همان چیزی است که در این دوره یاد می‌گیری.</p>
+<h3>GraphQL</h3><p>دقیقاً داده‌ای که نیاز داری را query می‌کنی. توسط Meta/Facebook ساخته شده.</p>
+<h3>SOAP</h3><p>قدیمی‌تر، مبتنی بر XML. هنوز در بانک‌ها و سیستم‌های سازمانی استفاده می‌شود.</p>
+<div class="tip ok"><span class="tip-icon">✅</span><p>این دوره روی <strong>REST API</strong> تمرکز دارد — پرکاربردترین نوع. وقتی REST را یاد بگیری، بقیه آسان می‌شوند.</p></div>
+` },
+  { id:1, title:'HTTP Protocol', title_fa:'پروتکل HTTP', level:'🟢 Beginner', time:'8 min', content:`
+<h1>🔗 HTTP Protocol</h1>
+<div class="ch-meta"><span>🟢 Beginner</span><span>⏱ 8 min</span></div>
+<p><strong>HTTP (HyperText Transfer Protocol)</strong> is the foundation of data communication on the web. REST APIs are built directly on top of it.</p>
+<h2>Request → Response</h2>
+<p>HTTP is a <strong>request-response protocol</strong>. A client sends a request, the server processes it and sends back a response. The connection then closes (for regular HTTP).</p>
+<h2>Anatomy of a Request</h2>
+<pre><code>GET /users/1 HTTP/1.1
+Host: api.example.com
+Accept: application/json
+Authorization: Bearer eyJhbGc...</code></pre>
+<ul><li><strong>Method</strong> — what action (GET, POST, etc.)</li><li><strong>Path</strong> — where to send it (/users/1)</li><li><strong>Headers</strong> — metadata (auth, format expectations)</li><li><strong>Body</strong> — data payload (POST/PUT only)</li></ul>
+<h2>Anatomy of a Response</h2>
+<pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Alice"
+}</code></pre>
+<ul><li><strong>Status Code</strong> — did it work? (200, 404, 500…)</li><li><strong>Headers</strong> — metadata about the response</li><li><strong>Body</strong> — the actual data returned</li></ul>
+<h2>URL Breakdown</h2>
+<pre><code>https://api.example.com/v1/users?limit=10&page=2
+
+Protocol:  https://
+Domain:    api.example.com
+Path:      /v1/users
+Query:     limit=10&page=2</code></pre>
+<div class="tip"><span class="tip-icon">💡</span><p>Always use <code>https://</code> — it encrypts data in transit. Never send API keys or tokens over plain <code>http://</code>.</p></div>
+`, content_fa:`
+<h1>🔗 پروتکل HTTP</h1>
+<div class="ch-meta"><span>🟢 مبتدی</span><span>⏱ ۸ دقیقه</span></div>
+<p><strong>HTTP</strong> پایه ارتباط داده در وب است. REST API ها مستقیماً روی آن ساخته می‌شوند.</p>
+<h2>درخواست ← پاسخ</h2>
+<p>HTTP یک پروتکل درخواست-پاسخ است. کلاینت درخواست می‌فرستد، سرور پردازش می‌کند و پاسخ برمی‌گرداند.</p>
+<h2>ساختار یک درخواست</h2>
+<pre><code>GET /users/1 HTTP/1.1
+Host: api.example.com
+Accept: application/json
+Authorization: Bearer eyJhbGc...</code></pre>
+<ul><li><strong>Method</strong> — عملیات (GET, POST, ...)</li><li><strong>Path</strong> — مسیر (/users/1)</li><li><strong>Headers</strong> — متادیتا (احراز هویت، نوع محتوا)</li><li><strong>Body</strong> — داده‌های ارسالی (فقط POST/PUT)</li></ul>
+<h2>ساختار یک پاسخ</h2>
+<pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{ "id": 1, "name": "Alice" }</code></pre>
+<ul><li><strong>Status Code</strong> — آیا موفق شد؟ (200, 404, 500...)</li><li><strong>Headers</strong> — متادیتای پاسخ</li><li><strong>Body</strong> — داده‌های برگشتی</li></ul>
+<div class="tip"><span class="tip-icon">💡</span><p>همیشه از <code>https://</code> استفاده کن — داده‌ها را رمزنگاری می‌کند. هرگز توکن یا کلید API را از طریق <code>http://</code> ارسال نکن.</p></div>
+` },
+  { id:2, title:'HTTP Methods (CRUD)', title_fa:'متدهای HTTP', level:'🟢 Beginner', time:'10 min', content:`
+<h1>⚡ HTTP Methods</h1>
+<div class="ch-meta"><span>🟢 Beginner</span><span>⏱ 10 min</span></div>
+<p>HTTP methods tell the server <strong>what action to perform</strong>. They map to CRUD operations.</p>
+<h2><span class="badge bg">GET</span> — Read</h2>
+<p>Fetch data. No body. Must never change data.</p>
+<pre><code>GET /api/users         → list all users
+GET /api/users/42      → get user 42
+GET /api/users?age=25  → filter by age</code></pre>
+<h2><span class="badge bp">POST</span> — Create</h2>
+<p>Create a new resource. Body required.</p>
+<pre><code>POST /api/users
+Content-Type: application/json
+{ "name": "Alice", "email": "a@b.com" }</code></pre>
+<h2><span class="badge bu">PUT</span> — Replace</h2>
+<p>Fully replace a resource. Send all fields.</p>
+<pre><code>PUT /api/users/42
+{ "name": "Alice", "email": "a@b.com", "age": 30 }</code></pre>
+<h2><span class="badge bpa">PATCH</span> — Update</h2>
+<p>Partially update. Send only changed fields.</p>
+<pre><code>PATCH /api/users/42
+{ "name": "Alice Updated" }</code></pre>
+<h2><span class="badge bd">DELETE</span> — Delete</h2>
+<pre><code>DELETE /api/users/42</code></pre>
+<div class="tip warn"><span class="tip-icon">⚠️</span><p><strong>PUT vs PATCH:</strong> PUT replaces the whole object (missing fields may be nulled). PATCH only updates fields you send. Most modern APIs prefer PATCH for updates.</p></div>
+<h2>Idempotency</h2>
+<p>Calling an idempotent operation twice gives the same result as calling it once.</p>
+<ul><li>GET ✅ PUT ✅ DELETE ✅ — idempotent</li><li>POST ❌ PATCH ❌ — not idempotent (may create duplicates)</li></ul>
+`, content_fa:`
+<h1>⚡ متدهای HTTP</h1>
+<div class="ch-meta"><span>🟢 مبتدی</span><span>⏱ ۱۰ دقیقه</span></div>
+<p>متدهای HTTP به سرور می‌گویند <strong>چه عملیاتی انجام دهد</strong>. آن‌ها به عملیات CRUD نگاشت می‌شوند.</p>
+<h2><span class="badge bg">GET</span> — خواندن</h2>
+<p>واکشی داده. بدون بدنه. هرگز نباید داده تغییر دهد.</p>
+<pre><code>GET /api/users         → لیست همه کاربران
+GET /api/users/42      → گرفتن کاربر ۴۲
+GET /api/users?age=25  → فیلتر بر اساس سن</code></pre>
+<h2><span class="badge bp">POST</span> — ایجاد</h2>
+<p>ایجاد منبع جدید. بدنه لازم است.</p>
+<pre><code>POST /api/users
+Content-Type: application/json
+{ "name": "علی", "email": "ali@test.com" }</code></pre>
+<h2><span class="badge bu">PUT</span> — جایگزینی کامل</h2>
+<p>جایگزینی کامل منبع. تمام فیلدها الزامی هستند.</p>
+<h2><span class="badge bpa">PATCH</span> — بروزرسانی جزئی</h2>
+<p>فقط فیلدهایی که می‌فرستی بروز می‌شوند.</p>
+<h2><span class="badge bd">DELETE</span> — حذف</h2>
+<pre><code>DELETE /api/users/42</code></pre>
+<div class="tip warn"><span class="tip-icon">⚠️</span><p><strong>PUT در مقابل PATCH:</strong> PUT کل شیء را جایگزین می‌کند. PATCH فقط فیلدهای ارسال‌شده را بروز می‌کند. اکثر API های مدرن PATCH را ترجیح می‌دهند.</p></div>
+` },
+  { id:3, title:'HTTP Status Codes', title_fa:'کدهای وضعیت HTTP', level:'🟢 Beginner', time:'8 min', content:`
+<h1>🚦 HTTP Status Codes</h1>
+<div class="ch-meta"><span>🟢 Beginner</span><span>⏱ 8 min</span></div>
+<p>Status codes are 3-digit numbers that tell you the <strong>result of your request</strong>.</p>
+<h2>2xx — Success ✅</h2>
+<table class="ref"><tr><td>200 OK</td><td>Generic success — GET, PATCH, DELETE</td></tr><tr><td>201 Created</td><td>New resource created — POST</td></tr><tr><td>204 No Content</td><td>Success but no body — DELETE</td></tr></table>
+<h2>3xx — Redirection 🔀</h2>
+<table class="ref"><tr><td>301 Moved Permanently</td><td>URL changed forever</td></tr><tr><td>302 Found</td><td>Temporary redirect</td></tr></table>
+<h2>4xx — Client Errors ❌ (your fault)</h2>
+<table class="ref"><tr><td>400 Bad Request</td><td>Invalid data / syntax</td></tr><tr><td>401 Unauthorized</td><td>Not authenticated — missing/bad token</td></tr><tr><td>403 Forbidden</td><td>Authenticated but no permission</td></tr><tr><td>404 Not Found</td><td>Resource doesn't exist</td></tr><tr><td>422 Unprocessable</td><td>Validation failed</td></tr><tr><td>429 Too Many Requests</td><td>Rate limit hit</td></tr></table>
+<h2>5xx — Server Errors 💥 (their fault)</h2>
+<table class="ref"><tr><td>500 Internal Server Error</td><td>Server bug / crash</td></tr><tr><td>502 Bad Gateway</td><td>Proxy got bad response</td></tr><tr><td>503 Service Unavailable</td><td>Server down / overloaded</td></tr></table>
+<div class="tip"><span class="tip-icon">💡</span><p><strong>Quick rule:</strong> 4xx = your fault (wrong request). 5xx = their fault (server broken).</p></div>
+` },
+  { id:4, title:'Headers & Content Types', title_fa:'هدرها و نوع محتوا', level:'🟡 Intermediate', time:'10 min', content:`
+<h1>📋 Headers & Content Types</h1>
+<div class="ch-meta"><span>🟡 Intermediate</span><span>⏱ 10 min</span></div>
+<p>HTTP headers are <strong>key-value pairs</strong> that carry metadata — like labels on a package telling you what's inside and how to handle it.</p>
+<h2>Key Request Headers</h2>
+<h3>Content-Type</h3><p>Format of the request body you're sending.</p>
+<pre><code>Content-Type: application/json
+Content-Type: multipart/form-data      // file uploads
+Content-Type: application/x-www-form-urlencoded</code></pre>
+<h3>Accept</h3><p>Format you want the response in.</p>
+<pre><code>Accept: application/json
+Accept: */*   // any format is fine</code></pre>
+<h3>Authorization</h3>
+<pre><code>Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...
+Authorization: Basic dXNlcjpwYXNz
+Authorization: ApiKey your-key-here</code></pre>
+<h2>Key Response Headers</h2>
+<h3>Rate Limit Headers</h3>
+<pre><code>X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 987
+X-RateLimit-Reset: 1700000000</code></pre>
+<h3>CORS Headers</h3>
+<pre><code>Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE</code></pre>
+<div class="tip"><span class="tip-icon">💡</span><p><strong>CORS</strong> is a browser security feature. When calling an API from JavaScript, the API server must send CORS headers allowing your origin. This is why browser tests sometimes fail while tools like Postman succeed — Postman isn't a browser.</p></div>
+<h2>Custom Headers</h2>
+<pre><code>X-API-Key: your-key
+X-Request-ID: abc-123-xyz
+X-Client-Version: 2.1.0</code></pre>
+` },
+  { id:5, title:'JSON & Request Bodies', title_fa:'JSON و بدنه درخواست', level:'🟡 Intermediate', time:'10 min', content:`
+<h1>📦 JSON & Request Bodies</h1>
+<div class="ch-meta"><span>🟡 Intermediate</span><span>⏱ 10 min</span></div>
+<p><strong>JSON (JavaScript Object Notation)</strong> is the universal data format of REST APIs.</p>
+<h2>JSON Data Types</h2>
+<pre><code>{
+  "string":  "hello world",
+  "number":  42,
+  "float":   3.14,
+  "boolean": true,
+  "null":    null,
+  "array":   [1, 2, 3, "four"],
+  "object":  { "nested": "value" }
+}</code></pre>
+<h2>JSON Rules</h2>
+<ul><li>Keys must be in <strong>double quotes</strong></li><li>Strings must be double-quoted (not single)</li><li>No trailing commas</li><li>No comments</li></ul>
+<h2>Sending JSON (POST / PUT / PATCH)</h2>
+<pre><code>POST /api/products
+Content-Type: application/json
+
+{
+  "name": "Laptop Pro",
+  "price": 1299.99,
+  "inStock": true,
+  "tags": ["laptop", "portable"]
+}</code></pre>
+<h2>Common Response Patterns</h2>
+<h3>Pagination</h3>
+<pre><code>{
+  "data": [...],
+  "pagination": { "page": 1, "total": 342, "per_page": 20 }
+}</code></pre>
+<h3>Error</h3>
+<pre><code>{
+  "error": { "code": "NOT_FOUND", "message": "User not found" }
+}</code></pre>
+<div class="tip"><span class="tip-icon">💡</span><p>In JavaScript: <code>JSON.parse(str)</code> → object, <code>JSON.stringify(obj)</code> → string. In Python: <code>json.loads(s)</code> and <code>json.dumps(obj)</code>.</p></div>
+` },
+  { id:6, title:'Authentication', title_fa:'احراز هویت', level:'🟡 Intermediate', time:'12 min', content:`
+<h1>🔐 Authentication & API Keys</h1>
+<div class="ch-meta"><span>🟡 Intermediate</span><span>⏱ 12 min</span></div>
+<p>Most real APIs require you to <strong>prove who you are</strong> before accessing protected data.</p>
+<h2>1. API Keys</h2>
+<p>Simplest method. A unique token tied to your account.</p>
+<pre><code>// Header (preferred)
+X-API-Key: ak_live_abc123xyz
+
+// Query param (avoid — shows in server logs)
+GET /data?api_key=ak_live_abc123xyz</code></pre>
+<div class="tip warn"><span class="tip-icon">⚠️</span><p>Never put API keys in frontend code, Git commits, or URLs. Store them server-side in environment variables.</p></div>
+<h2>2. Bearer / JWT Tokens</h2>
+<p>Most common in modern web apps. User logs in, gets a token, uses it for all requests.</p>
+<pre><code>// Step 1: Login
+POST /auth/login
+{ "email": "user@example.com", "password": "secret" }
+→ { "token": "eyJhbGciOiJIUzI1NiJ9..." }
+
+// Step 2: Use token
+GET /api/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9...</code></pre>
+<h2>3. Basic Auth</h2>
+<pre><code>Authorization: Basic dXNlcjpwYXNzd29yZA==
+// = base64("user:password")</code></pre>
+<h2>4. OAuth 2.0</h2>
+<p>Standard for "Login with Google/GitHub". The user grants your app access to their account on another service.</p>
+<pre><code>1. Redirect user → GitHub login page
+2. User grants permission
+3. GitHub sends back auth code
+4. Your server exchanges code → access token
+5. Use token in API calls</code></pre>
+<div class="tip ok"><span class="tip-icon">✅</span><p>Use <strong>API Keys</strong> for server-to-server. <strong>Bearer/JWT</strong> for web apps with user login. <strong>OAuth 2.0</strong> when accessing third-party user data.</p></div>
+` },
+  { id:7, title:'Query Parameters', title_fa:'پارامترهای Query', level:'🟡 Intermediate', time:'8 min', content:`
+<h1>🔎 Query Parameters & Filtering</h1>
+<div class="ch-meta"><span>🟡 Intermediate</span><span>⏱ 8 min</span></div>
+<p>Query parameters come after <code>?</code> in the URL and let you <strong>filter, sort, search, and paginate</strong> results.</p>
+<h2>Syntax</h2>
+<pre><code>https://api.example.com/users?key1=val1&key2=val2
+//  First param:  ?
+//  More params:  &</code></pre>
+<h2>Filtering</h2>
+<pre><code>GET /api/users?status=active
+GET /api/products?category=electronics&max_price=500</code></pre>
+<h2>Pagination</h2>
+<pre><code>// Page-based
+GET /api/users?page=2&limit=20
+
+// Offset-based
+GET /api/users?offset=40&limit=20</code></pre>
+<h2>Sorting</h2>
+<pre><code>GET /api/products?sort=price&order=asc
+GET /api/users?sort=-created_at   // - = descending</code></pre>
+<h2>Field Selection</h2>
+<pre><code>GET /api/users?fields=id,name,email
+// Returns only those fields — smaller payload</code></pre>
+<h2>Search</h2>
+<pre><code>GET /api/users?search=alice
+GET /api/products?q=laptop+pro</code></pre>
+<div class="tip"><span class="tip-icon">💡</span><p>Use <code>URLSearchParams</code> in JavaScript to build query strings safely:</p></div>
+<pre><code>const q = new URLSearchParams({ search: 'alice', limit: 10 });
+fetch('/api/users?' + q)</code></pre>
+` },
+  { id:8, title:'REST Design Principles', title_fa:'اصول طراحی REST', level:'🔴 Advanced', time:'15 min', content:`
+<h1>🏗️ REST API Design</h1>
+<div class="ch-meta"><span>🔴 Advanced</span><span>⏱ 15 min</span></div>
+<p>Good API design makes an API <strong>intuitive, consistent, and a pleasure to use</strong>.</p>
+<h2>URL Structure</h2>
+<pre><code>✅  GET    /api/v1/users
+    POST   /api/v1/users
+    GET    /api/v1/users/42
+    PATCH  /api/v1/users/42
+    DELETE /api/v1/users/42
+    GET    /api/v1/users/42/posts
+
+❌  GET /api/getUsers
+    POST /api/deleteUser?id=42</code></pre>
+<h2>Naming Rules</h2>
+<ul><li>Use <strong>nouns</strong>, not verbs (<code>/users</code> not <code>/getUsers</code>)</li><li>Use <strong>plural</strong> (<code>/users</code> not <code>/user</code>)</li><li>Use <strong>lowercase + hyphens</strong> (<code>/blog-posts</code>)</li><li>Nest for relationships (<code>/users/42/orders</code>)</li></ul>
+<h2>Versioning</h2>
+<pre><code>// URL versioning (most common)
+/api/v1/users
+/api/v2/users   // breaking changes → bump version</code></pre>
+<h2>Consistent Error Format</h2>
+<pre><code>{
+  "error": {
+    "status": 404,
+    "code": "USER_NOT_FOUND",
+    "message": "No user with ID 42 exists",
+    "timestamp": "2024-01-15T10:30:00Z"
+  }
+}</code></pre>
+<div class="tip ok"><span class="tip-icon">✅</span><p>Study <strong>Stripe's API</strong> and <strong>GitHub's API</strong> — widely considered best-in-class REST design. Copy their patterns.</p></div>
+` },
+  { id:9, title:'Rate Limiting & Errors', title_fa:'محدودیت نرخ و خطاها', level:'🔴 Advanced', time:'10 min', content:`
+<h1>🛡️ Rate Limiting & Error Handling</h1>
+<div class="ch-meta"><span>🔴 Advanced</span><span>⏱ 10 min</span></div>
+<h2>Rate Limiting</h2>
+<p>APIs cap how many requests you can make to prevent abuse.</p>
+<pre><code>X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 3
+X-RateLimit-Reset: 1700000000
+
+// When exceeded:
+HTTP 429 Too Many Requests
+Retry-After: 3600</code></pre>
+<h2>Exponential Backoff</h2>
+<pre><code>async function fetchRetry(url, retries = 3) {
+  for (let i = 0; i < retries; i++) {
+    const res = await fetch(url);
+    if (res.status === 429) {
+      await new Promise(r => setTimeout(r, 2**i * 1000));
+      continue;  // wait 1s, 2s, 4s...
+    }
+    return res;
+  }
+  throw new Error('Max retries exceeded');
+}</code></pre>
+<h2>Proper Error Handling</h2>
+<pre><code>const res = await fetch(url);
+
+// fetch() does NOT throw on 4xx/5xx — check res.ok!
+if (!res.ok) {
+  const err = await res.json().catch(() => ({}));
+  throw new Error(err.message || 'HTTP ' + res.status);
+}
+
+const data = await res.json();</code></pre>
+<div class="tip warn"><span class="tip-icon">⚠️</span><p><strong>Common mistake:</strong> <code>fetch()</code> only rejects on network errors. A 404 or 500 still resolves — always check <code>response.ok</code>.</p></div>
+` },
+  { id:10, title:'GraphQL Basics', title_fa:'مقدمات GraphQL', level:'🔴 Advanced', time:'12 min', content:`
+<h1>⬡ GraphQL</h1>
+<div class="ch-meta"><span>🔴 Advanced</span><span>⏱ 12 min</span></div>
+<p>GraphQL lets clients ask for <strong>exactly the data they need</strong>, nothing more or less.</p>
+<h2>REST vs GraphQL</h2>
+<pre><code>// REST — fixed shape, multiple round-trips
+GET /users/1         // full user object
+GET /users/1/posts   // all post fields
+
+// GraphQL — one request, exact shape
+POST /graphql
+{ user(id:1) { name  posts { title } } }</code></pre>
+<h2>Query (Read)</h2>
+<pre><code>query {
+  user(id: 42) {
+    name
+    email
+    posts(limit: 5) {
+      title
+      publishedAt
+    }
+  }
+}</code></pre>
+<h2>Mutation (Write)</h2>
+<pre><code>mutation {
+  createUser(input: { name: "Alice", email: "a@b.com" }) {
+    id
+    createdAt
+  }
+}</code></pre>
+<h2>Subscription (Real-time)</h2>
+<pre><code>subscription {
+  newMessage(channelId: "abc") {
+    id
+    text
+    author { name }
+  }
+}</code></pre>
+<div class="tip"><span class="tip-icon">💡</span><p>GraphQL is best for complex interconnected data (social, e-commerce). REST is simpler for straightforward CRUD. GitHub, Shopify, and X all offer GraphQL APIs.</p></div>
+` },
+  { id:11, title:'WebSockets & Real-time', title_fa:'WebSocket و بلادرنگ', level:'🔴 Advanced', time:'10 min', content:`
+<h1>⚡ WebSockets & Real-time</h1>
+<div class="ch-meta"><span>🔴 Advanced</span><span>⏱ 10 min</span></div>
+<p>HTTP is request-response and closes after each exchange. <strong>WebSockets</strong> keep a persistent connection open — either side can send messages at any time.</p>
+<h2>When to Use</h2>
+<ul><li>💬 Chat apps</li><li>📊 Live dashboards / stock prices</li><li>🎮 Multiplayer games</li><li>🔔 Push notifications</li><li>📝 Collaborative editing (Google Docs)</li></ul>
+<h2>WebSocket in JavaScript</h2>
+<pre><code>const ws = new WebSocket('wss://api.example.com/ws');
+
+ws.onopen    = () => ws.send(JSON.stringify({ type: 'subscribe', ch: 'prices' }));
+ws.onmessage = e  => console.log('Received:', JSON.parse(e.data));
+ws.onclose   = () => console.log('Disconnected');
+ws.onerror   = e  => console.error(e);
+
+// Send at any time:
+ws.send(JSON.stringify({ type: 'message', text: 'Hello!' }));</code></pre>
+<h2>Server-Sent Events (SSE)</h2>
+<p>One-way server → client streaming. Simpler than WebSockets.</p>
+<pre><code>const es = new EventSource('/api/stream');
+es.onmessage = e => console.log(e.data);
+
+// Server sends:
+data: {"price": 42.10}
+data: {"price": 42.15}</code></pre>
+<div class="tip ok"><span class="tip-icon">✅</span><p><strong>Which to use:</strong> WebSockets for two-way real-time (chat, games). SSE for one-way streams (feeds, progress bars). Long polling for simple infrequent updates.</p></div>
+` }
+];
+
+// ── QUICK EXAMPLES ─────────────────────────────────────
+const EXAMPLES = [
+  // GET
+  { g:'GET',    name:'Single post',            method:'GET',    url:'https://jsonplaceholder.typicode.com/posts/1',                      body:'', hdrs:[] },
+  { g:'GET',    name:'All posts',              method:'GET',    url:'https://jsonplaceholder.typicode.com/posts',                        body:'', hdrs:[] },
+  { g:'GET',    name:'Filter: userId=1',       method:'GET',    url:'https://jsonplaceholder.typicode.com/posts?userId=1',               body:'', hdrs:[] },
+  { g:'GET',    name:'Paginate: page 2',       method:'GET',    url:'https://jsonplaceholder.typicode.com/posts?_page=2&_limit=5',       body:'', hdrs:[] },
+  { g:'GET',    name:'All users',              method:'GET',    url:'https://jsonplaceholder.typicode.com/users',                        body:'', hdrs:[] },
+  { g:'GET',    name:"User's posts",           method:'GET',    url:'https://jsonplaceholder.typicode.com/users/1/posts',                body:'', hdrs:[] },
+  { g:'GET',    name:'Completed todos',        method:'GET',    url:'https://jsonplaceholder.typicode.com/todos?completed=true&_limit=5', body:'', hdrs:[] },
+  { g:'GET',    name:'Pikachu (PokéAPI)',       method:'GET',    url:'https://pokeapi.co/api/v2/pokemon/pikachu',                        body:'', hdrs:[] },
+  { g:'GET',    name:'Fire type moves',        method:'GET',    url:'https://pokeapi.co/api/v2/type/fire',                              body:'', hdrs:[] },
+  { g:'GET',    name:'Germany (Countries)',    method:'GET',    url:'https://restcountries.com/v3.1/alpha/de',                          body:'', hdrs:[] },
+  { g:'GET',    name:'GitHub: octocat',        method:'GET',    url:'https://api.github.com/users/octocat',                             body:'', hdrs:[] },
+  { g:'GET',    name:'GitHub: repo info',      method:'GET',    url:'https://api.github.com/repos/torvalds/linux',                      body:'', hdrs:[] },
+  // POST
+  { g:'POST',   name:'Create post',            method:'POST',   url:'https://jsonplaceholder.typicode.com/posts',
+    body:'{\n  "title": "My First API Post",\n  "body": "Learning APIs is fun!",\n  "userId": 1\n}',
+    hdrs:[['Content-Type','application/json']] },
+  { g:'POST',   name:'Create user',            method:'POST',   url:'https://jsonplaceholder.typicode.com/users',
+    body:'{\n  "name": "Alice Smith",\n  "username": "alice",\n  "email": "alice@example.com"\n}',
+    hdrs:[['Content-Type','application/json']] },
+  { g:'POST',   name:'Create comment',         method:'POST',   url:'https://jsonplaceholder.typicode.com/comments',
+    body:'{\n  "postId": 1,\n  "name": "Great post!",\n  "email": "reader@example.com",\n  "body": "Really helpful, thanks!"\n}',
+    hdrs:[['Content-Type','application/json']] },
+  { g:'POST',   name:'HTTPBin: inspect body',  method:'POST',   url:'https://httpbin.org/post',
+    body:'{\n  "message": "hello world",\n  "number": 42,\n  "tags": ["api", "test"]\n}',
+    hdrs:[['Content-Type','application/json']] },
+  // PUT
+  { g:'PUT',    name:'Replace post (full)',    method:'PUT',    url:'https://jsonplaceholder.typicode.com/posts/1',
+    body:'{\n  "id": 1,\n  "title": "Completely Replaced Title",\n  "body": "All fields replaced",\n  "userId": 1\n}',
+    hdrs:[['Content-Type','application/json']] },
+  // PATCH
+  { g:'PATCH',  name:'Update title only',      method:'PATCH',  url:'https://jsonplaceholder.typicode.com/posts/1',
+    body:'{\n  "title": "Only this field changed"\n}',
+    hdrs:[['Content-Type','application/json']] },
+  { g:'PATCH',  name:'Update body only',       method:'PATCH',  url:'https://jsonplaceholder.typicode.com/posts/1',
+    body:'{\n  "body": "Updated content — title unchanged"\n}',
+    hdrs:[['Content-Type','application/json']] },
+  // DELETE
+  { g:'DELETE', name:'Delete post',            method:'DELETE', url:'https://jsonplaceholder.typicode.com/posts/1',    body:'', hdrs:[] },
+  { g:'DELETE', name:'Delete comment',         method:'DELETE', url:'https://jsonplaceholder.typicode.com/comments/1', body:'', hdrs:[] },
+  // AUTH
+  { g:'AUTH',   name:'Bearer token test',      method:'GET',    url:'https://httpbin.org/bearer',
+    body:'', hdrs:[['Authorization','Bearer my-secret-token-123']] },
+  { g:'AUTH',   name:'API Key header',         method:'GET',    url:'https://httpbin.org/headers',
+    body:'', hdrs:[['X-API-Key','sk_live_abc123xyz'],['Accept','application/json']] },
+  { g:'AUTH',   name:'Basic Auth',             method:'GET',    url:'https://httpbin.org/basic-auth/testuser/testpass',
+    body:'', hdrs:[['Authorization','Basic dGVzdHVzZXI6dGVzdHBhc3M=']] },
+  { g:'AUTH',   name:'Custom + Bearer headers',method:'GET',    url:'https://httpbin.org/headers',
+    body:'', hdrs:[['X-Custom-Header','my-value'],['Authorization','Bearer demo-token']] },
+  // HEADERS
+  { g:'HEADERS',name:'Inspect your headers',   method:'GET',    url:'https://httpbin.org/headers',
+    body:'', hdrs:[['X-My-Header','hello'],['Accept','application/json']] },
+  { g:'HEADERS',name:'Your IP address',        method:'GET',    url:'https://httpbin.org/ip',        body:'', hdrs:[] },
+  { g:'HEADERS',name:'User-Agent info',        method:'GET',    url:'https://httpbin.org/user-agent', body:'', hdrs:[] },
+  { g:'HEADERS',name:'HTTPBin GET details',    method:'GET',    url:'https://httpbin.org/get',        body:'', hdrs:[] },
+  // STATUS CODES
+  { g:'STATUS', name:'200 OK',                 method:'GET',    url:'https://httpbin.org/status/200', body:'', hdrs:[] },
+  { g:'STATUS', name:'201 Created',            method:'GET',    url:'https://httpbin.org/status/201', body:'', hdrs:[] },
+  { g:'STATUS', name:'204 No Content',         method:'GET',    url:'https://httpbin.org/status/204', body:'', hdrs:[] },
+  { g:'STATUS', name:'400 Bad Request',        method:'GET',    url:'https://httpbin.org/status/400', body:'', hdrs:[] },
+  { g:'STATUS', name:'401 Unauthorized',       method:'GET',    url:'https://httpbin.org/status/401', body:'', hdrs:[] },
+  { g:'STATUS', name:'403 Forbidden',          method:'GET',    url:'https://httpbin.org/status/403', body:'', hdrs:[] },
+  { g:'STATUS', name:'404 Not Found',          method:'GET',    url:'https://httpbin.org/status/404', body:'', hdrs:[] },
+  { g:'STATUS', name:'429 Rate Limited',       method:'GET',    url:'https://httpbin.org/status/429', body:'', hdrs:[] },
+  { g:'STATUS', name:'500 Server Error',       method:'GET',    url:'https://httpbin.org/status/500', body:'', hdrs:[] },
+];
+
+// ── DOCS DATA ──────────────────────────────────────────
+const DOCS = [
+  { cat:'🟢 GET — Read Data', items:[
+    { icon:'🟢', title:'GET Request', wide:true,
+      tries:['Single post','All posts','Filter: userId=1','Paginate: page 2','GitHub: octocat'],
+      html:`<p><strong>GET</strong> retrieves data from the server. It is <strong>read-only</strong> and must never modify data.</p>
+<h4>URL Patterns</h4>
+<pre><code>GET /api/posts           → list all posts
+GET /api/posts/1         → get post with ID 1
+GET /api/users/1/posts   → posts belonging to user 1</code></pre>
+<h4>Query Parameters — Filter / Sort / Paginate / Search</h4>
+<pre><code>GET /posts?userId=1                      → filter by field
+GET /posts?_page=2&_limit=10             → pagination
+GET /posts?_sort=title&_order=asc        → sorting
+GET /posts?title_like=api                → search (contains)
+GET /users?email=alice@example.com       → exact match</code></pre>
+<h4>Typical Response</h4>
+<pre><code>HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "Getting Started with APIs",
+  "body": "...",
+  "userId": 1
+}</code></pre>
+<h4>Rules</h4>
+<ul>
+  <li>No request body — parameters go in the URL</li>
+  <li>Returns <span class="c2">200 OK</span> on success</li>
+  <li>Idempotent — same call always returns same result</li>
+  <li>Safe — guaranteed not to modify data</li>
+  <li>Can be cached by browsers and proxies</li>
+</ul>` }
+  ]},
+
+  { cat:'🔵 POST — Create Data', items:[
+    { icon:'🔵', title:'POST Request', wide:true,
+      tries:['Create post','Create user','Create comment','HTTPBin: inspect body'],
+      html:`<p><strong>POST</strong> creates a new resource on the server. Data is sent in the request <strong>body</strong>.</p>
+<h4>Syntax</h4>
+<pre><code>POST /api/posts
+Content-Type: application/json
+
+{
+  "title": "My First Post",
+  "body": "Hello API world!",
+  "userId": 1
+}</code></pre>
+<h4>Successful Response</h4>
+<pre><code>HTTP/1.1 201 Created
+Content-Type: application/json
+Location: /api/posts/101
+
+{
+  "id": 101,
+  "title": "My First Post",
+  "body": "Hello API world!",
+  "userId": 1
+}</code></pre>
+<h4>Rules</h4>
+<ul>
+  <li>Always set <code>Content-Type: application/json</code> when sending JSON</li>
+  <li>Returns <span class="c2">201 Created</span> on success (not 200)</li>
+  <li><strong>Not idempotent</strong> — calling twice creates two separate resources</li>
+  <li>Response body contains the newly created object with its server-assigned ID</li>
+  <li>The <code>Location</code> header points to the new resource URL</li>
+</ul>
+<h4>Common Errors</h4>
+<ul>
+  <li><span class="c4">400</span> Missing Content-Type → server may reject the body</li>
+  <li><span class="c4">400</span> Invalid JSON syntax → fix your JSON formatting</li>
+  <li><span class="c4">422</span> Missing required fields → check API docs for required fields</li>
+  <li><span class="c4">409</span> Conflict → e.g. duplicate email when creating a user</li>
+</ul>` }
+  ]},
+
+  { cat:'🟡 PUT & PATCH — Update Data', items:[
+    { icon:'🟡', title:'PUT — Full Replacement',
+      tries:['Replace post (full)'],
+      html:`<p><strong>PUT</strong> completely replaces an existing resource. You must send <strong>all fields</strong>.</p>
+<pre><code>PUT /api/posts/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "title": "Brand New Title",
+  "body": "Completely new body",
+  "userId": 1
+}</code></pre>
+<h4>Response</h4>
+<pre><code>HTTP/1.1 200 OK
+{ "id": 1, "title": "Brand New Title", ... }</code></pre>
+<h4>Warning</h4>
+<ul>
+  <li>⚠️ Fields you omit may be set to <code>null</code> or deleted</li>
+  <li>Always send the complete object</li>
+  <li>Idempotent — calling twice with same data gives same result</li>
+</ul>` },
+    { icon:'🟠', title:'PATCH — Partial Update',
+      tries:['Update title only','Update body only'],
+      html:`<p><strong>PATCH</strong> updates only the fields you send. All other fields remain unchanged.</p>
+<pre><code>PATCH /api/posts/1
+Content-Type: application/json
+
+{
+  "title": "Only title changed"
+}
+// body, userId etc stay exactly as they were</code></pre>
+<h4>Response</h4>
+<pre><code>HTTP/1.1 200 OK
+{
+  "id": 1,
+  "title": "Only title changed",
+  "body": "original body still here",
+  "userId": 1
+}</code></pre>
+<h4>PUT vs PATCH</h4>
+<table>
+  <tr><td>PUT</td><td>Replace entire object — send ALL fields or risk data loss</td></tr>
+  <tr><td>PATCH</td><td>Partial update — send only what changed (preferred)</td></tr>
+</table>` }
+  ]},
+
+  { cat:'🔴 DELETE — Remove Data', items:[
+    { icon:'🔴', title:'DELETE Request',
+      tries:['Delete post','Delete comment'],
+      html:`<p><strong>DELETE</strong> removes a resource from the server permanently.</p>
+<pre><code>DELETE /api/posts/1
+// No body needed</code></pre>
+<h4>Possible Responses</h4>
+<table>
+  <tr><td class="c2">200 OK</td><td>Deleted successfully — response has body (often the deleted object)</td></tr>
+  <tr><td class="c2">204 No Content</td><td>Deleted successfully — no response body (most common)</td></tr>
+  <tr><td class="c4">404 Not Found</td><td>Resource didn't exist</td></tr>
+  <tr><td class="c4">403 Forbidden</td><td>You don't have permission to delete this</td></tr>
+</table>
+<h4>Notes</h4>
+<ul>
+  <li>No request body needed</li>
+  <li>Idempotent — deleting the same resource twice gives 204 then 404</li>
+  <li>Some APIs do "soft delete" (mark as deleted) instead of actually removing</li>
+</ul>` }
+  ]},
+
+  { cat:'🔐 Authentication', items:[
+    { icon:'🗝️', title:'API Keys',
+      tries:['API Key header','Inspect your headers'],
+      html:`<p>A secret token tied to your account. The simplest auth method.</p>
+<h4>Option 1: Header (Recommended)</h4>
+<pre><code>GET /api/data
+X-API-Key: sk_live_abc123xyz</code></pre>
+<h4>Option 2: Query Param (Avoid)</h4>
+<pre><code>GET /api/data?api_key=sk_live_abc123xyz
+⚠️  Appears in server logs, browser history, URLs</code></pre>
+<h4>Best Practices</h4>
+<ul>
+  <li>Store in environment variables (<code>process.env.API_KEY</code>)</li>
+  <li>Never hardcode in source code or commit to Git</li>
+  <li>Use different keys for development vs production</li>
+  <li>Rotate immediately if exposed</li>
+  <li>Restrict key permissions to only what's needed</li>
+</ul>` },
+    { icon:'🎫', title:'Bearer Token / JWT',
+      tries:['Bearer token test'],
+      html:`<p>A signed token issued after login. Used by the majority of modern APIs.</p>
+<h4>Step 1 — Login</h4>
+<pre><code>POST /auth/login
+Content-Type: application/json
+
+{ "email": "user@example.com", "password": "secret" }
+
+→ Response:
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjF9.abc",
+  "expires_in": 3600
+}</code></pre>
+<h4>Step 2 — Use Token</h4>
+<pre><code>GET /api/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjF9.abc</code></pre>
+<h4>JWT Structure</h4>
+<pre><code>eyJhbGciOiJIUzI1NiJ9  ←  header (algorithm)
+.eyJ1c2VySWQiOjF9     ←  payload (user data, base64)
+.abc123signature       ←  signature (tamper-proof)</code></pre>
+<ul>
+  <li>Decode payload at <strong>jwt.io</strong> to inspect claims</li>
+  <li>Never store tokens in localStorage in production — use httpOnly cookies</li>
+  <li>Tokens expire — refresh using a refresh token endpoint</li>
+</ul>` },
+    { icon:'🔑', title:'Basic Auth',
+      tries:['Basic Auth'],
+      html:`<p>Username + password encoded in Base64. Simple but older — use Bearer for new projects.</p>
+<h4>How It Works</h4>
+<pre><code>// Combine with colon and base64 encode
+btoa("testuser:testpass") = "dGVzdHVzZXI6dGVzdHBhc3M="
+
+// Send in header
+Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3M=</code></pre>
+<h4>JavaScript Example</h4>
+<pre><code>const creds = btoa('username:password');
+fetch('/api/data', {
+  headers: { 'Authorization': 'Basic ' + creds }
+});</code></pre>
+<h4>Important Warnings</h4>
+<ul>
+  <li>⚠️ Base64 is <strong>not encryption</strong> — it can be decoded instantly</li>
+  <li>Must always use over <strong>HTTPS</strong>, never plain HTTP</li>
+  <li>Not recommended for user-facing APIs — use JWT/OAuth instead</li>
+  <li>OK for simple server-to-server or internal tools</li>
+</ul>` },
+    { icon:'🌐', title:'OAuth 2.0',
+      tries:[],
+      html:`<p>The standard for "Login with Google / GitHub / Facebook". Lets users grant your app access to their account on a third-party service.</p>
+<h4>Authorization Code Flow</h4>
+<pre><code>1. User clicks "Login with GitHub"
+2. Redirect to GitHub:
+   https://github.com/login/oauth/authorize
+   ?client_id=YOUR_ID&redirect_uri=YOUR_CALLBACK
+3. User grants permission
+4. GitHub redirects back with code:
+   https://yourapp.com/callback?code=abc123
+5. Your server exchanges code for access_token:
+   POST https://github.com/login/oauth/access_token
+   { code, client_id, client_secret }
+6. Use token in API calls:
+   GET /user
+   Authorization: Bearer {access_token}</code></pre>
+<h4>Grant Types</h4>
+<table>
+  <tr><td>Authorization Code</td><td>Web apps — most secure</td></tr>
+  <tr><td>PKCE</td><td>Mobile / SPA apps — no client secret</td></tr>
+  <tr><td>Client Credentials</td><td>Server-to-server — no user involved</td></tr>
+  <tr><td>Implicit</td><td>Legacy — avoid in new projects</td></tr>
+</table>` }
+  ]},
+
+  { cat:'📋 Headers Complete Reference', items:[
+    { icon:'📤', title:'Request Headers',
+      tries:['Inspect your headers','Custom + Bearer headers'],
+      html:`<h4>Content-Type — Format of Body You're Sending</h4>
+<pre><code>Content-Type: application/json
+Content-Type: multipart/form-data       // file uploads
+Content-Type: application/x-www-form-urlencoded</code></pre>
+<h4>Accept — Format You Want Back</h4>
+<pre><code>Accept: application/json
+Accept: application/xml
+Accept: */*     // any format is fine</code></pre>
+<h4>Authorization — Auth Credentials</h4>
+<pre><code>Authorization: Bearer {jwt_token}
+Authorization: Basic {base64(user:pass)}
+Authorization: ApiKey {your_key}</code></pre>
+<h4>Other Common Request Headers</h4>
+<table>
+  <tr><td>User-Agent</td><td>Identifies your app (MyApp/2.0)</td></tr>
+  <tr><td>Accept-Language</td><td>Preferred response language (en-US)</td></tr>
+  <tr><td>Cache-Control</td><td>Caching hints (no-cache, max-age=3600)</td></tr>
+  <tr><td>If-None-Match</td><td>Conditional GET using ETag</td></tr>
+  <tr><td>X-Request-ID</td><td>Unique ID for request tracing</td></tr>
+</table>` },
+    { icon:'📥', title:'Response Headers',
+      tries:['Inspect your headers'],
+      html:`<h4>Rate Limiting Headers</h4>
+<pre><code>X-RateLimit-Limit: 1000       // max requests per window
+X-RateLimit-Remaining: 987    // how many you have left
+X-RateLimit-Reset: 1700000000 // unix timestamp — resets at
+Retry-After: 3600             // seconds to wait (on 429)</code></pre>
+<h4>CORS Headers</h4>
+<pre><code>Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE
+Access-Control-Allow-Headers: Content-Type, Authorization
+Access-Control-Max-Age: 86400</code></pre>
+<h4>Other Common Response Headers</h4>
+<table>
+  <tr><td>Content-Type</td><td>Format of the response body</td></tr>
+  <tr><td>Content-Length</td><td>Size of response body in bytes</td></tr>
+  <tr><td>Location</td><td>URL of newly created resource (201)</td></tr>
+  <tr><td>ETag</td><td>Version fingerprint for caching</td></tr>
+  <tr><td>Last-Modified</td><td>When the resource last changed</td></tr>
+  <tr><td>Cache-Control</td><td>How long client should cache (max-age)</td></tr>
+</table>` }
+  ]},
+
+  { cat:'🚦 Status Codes Complete', items:[
+    { icon:'✅', title:'2xx — Success',
+      tries:['200 OK','201 Created','204 No Content'],
+      html:`<table>
+  <tr><td class="c2">200 OK</td><td>Generic success — GET, PATCH, DELETE</td></tr>
+  <tr><td class="c2">201 Created</td><td>New resource made — POST (includes Location header)</td></tr>
+  <tr><td class="c2">202 Accepted</td><td>Request accepted, processing not yet done (async)</td></tr>
+  <tr><td class="c2">204 No Content</td><td>Success but no body — typical for DELETE</td></tr>
+  <tr><td class="c2">206 Partial Content</td><td>Partial response (range/streaming)</td></tr>
+</table>` },
+    { icon:'🔀', title:'3xx — Redirects',
+      tries:[],
+      html:`<table>
+  <tr><td class="c3">301 Moved Permanently</td><td>URL changed forever — update your links</td></tr>
+  <tr><td class="c3">302 Found</td><td>Temporary redirect</td></tr>
+  <tr><td class="c3">304 Not Modified</td><td>Use your cached version (ETag matched)</td></tr>
+  <tr><td class="c3">307 Temporary Redirect</td><td>Same as 302 but keep the HTTP method</td></tr>
+</table>` },
+    { icon:'❌', title:'4xx — Client Errors',
+      tries:['400 Bad Request','401 Unauthorized','403 Forbidden','404 Not Found','429 Rate Limited'],
+      html:`<p>Something wrong with <strong>your request</strong>.</p>
+<table>
+  <tr><td class="c4">400 Bad Request</td><td>Invalid syntax, malformed JSON, bad data</td></tr>
+  <tr><td class="c4">401 Unauthorized</td><td>Not authenticated — missing or invalid token</td></tr>
+  <tr><td class="c4">403 Forbidden</td><td>Authenticated but lacking permission</td></tr>
+  <tr><td class="c4">404 Not Found</td><td>Resource doesn't exist at this URL</td></tr>
+  <tr><td class="c4">405 Method Not Allowed</td><td>Wrong HTTP method (e.g. DELETE on read-only)</td></tr>
+  <tr><td class="c4">409 Conflict</td><td>State conflict (duplicate email, version mismatch)</td></tr>
+  <tr><td class="c4">410 Gone</td><td>Resource permanently deleted (404 but permanent)</td></tr>
+  <tr><td class="c4">422 Unprocessable</td><td>Validation failed — required field missing etc.</td></tr>
+  <tr><td class="c4">429 Too Many Requests</td><td>Rate limit hit — wait and retry</td></tr>
+</table>` },
+    { icon:'💥', title:'5xx — Server Errors',
+      tries:['500 Server Error'],
+      html:`<p>The server failed — <strong>not your fault</strong>.</p>
+<table>
+  <tr><td class="c4">500 Internal Server Error</td><td>Unhandled exception / bug in server code</td></tr>
+  <tr><td class="c4">501 Not Implemented</td><td>Feature not yet built on this server</td></tr>
+  <tr><td class="c4">502 Bad Gateway</td><td>Reverse proxy got bad response from upstream</td></tr>
+  <tr><td class="c4">503 Service Unavailable</td><td>Server overloaded or in maintenance</td></tr>
+  <tr><td class="c4">504 Gateway Timeout</td><td>Upstream took too long to respond</td></tr>
+</table>` }
+  ]},
+
+  { cat:'🔬 Public APIs to Practice', items:[
+    { icon:'📋', title:'JSONPlaceholder',
+      tries:['Single post','All posts','Create post','Replace post (full)','Update title only','Delete post'],
+      html:`<p>Free fake REST API — no auth, no setup. Perfect for beginners.</p>
+<table>
+  <tr><td>GET /posts</td><td>100 fake posts</td></tr>
+  <tr><td>GET /users</td><td>10 users with addresses</td></tr>
+  <tr><td>GET /comments</td><td>500 comments</td></tr>
+  <tr><td>GET /todos</td><td>200 to-do items</td></tr>
+  <tr><td>GET /albums</td><td>100 albums</td></tr>
+</table>
+<p style="margin-top:8px;font-size:12px;color:var(--text-muted)">⚠️ Write ops (POST/PUT/DELETE) succeed but don't actually persist data.</p>` },
+    { icon:'🔬', title:'HTTPBin',
+      tries:['Inspect your headers','Bearer token test','200 OK','404 Not Found','HTTPBin: inspect body'],
+      html:`<p>Echoes back your request details. Best tool for learning how requests work.</p>
+<table>
+  <tr><td>GET /get</td><td>See your full GET request</td></tr>
+  <tr><td>POST /post</td><td>See your POST body echoed back</td></tr>
+  <tr><td>GET /headers</td><td>See all your headers</td></tr>
+  <tr><td>GET /bearer</td><td>Test Bearer token auth</td></tr>
+  <tr><td>GET /ip</td><td>Your current IP</td></tr>
+  <tr><td>GET /user-agent</td><td>Your browser's User-Agent</td></tr>
+  <tr><td>GET /status/{code}</td><td>Force any HTTP status code</td></tr>
+  <tr><td>GET /delay/{n}</td><td>Delayed response in seconds</td></tr>
+  <tr><td>GET /basic-auth/{u}/{p}</td><td>Basic auth endpoint</td></tr>
+</table>` },
+    { icon:'⚡', title:'PokéAPI',
+      tries:['Pikachu (PokéAPI)','Fire type moves'],
+      html:`<p>Free Pokémon data. Great for practicing nested JSON and data parsing. No auth.</p>
+<table>
+  <tr><td>GET /api/v2/pokemon/{name}</td><td>Pokémon stats, moves, types</td></tr>
+  <tr><td>GET /api/v2/type/{type}</td><td>All Pokémon of a type</td></tr>
+  <tr><td>GET /api/v2/move/{name}</td><td>Move details</td></tr>
+  <tr><td>GET /api/v2/ability/{name}</td><td>Ability description</td></tr>
+</table>` },
+    { icon:'🌍', title:'REST Countries',
+      tries:['Germany (Countries)'],
+      html:`<p>Country data — flags, capitals, populations, currencies. No auth.</p>
+<table>
+  <tr><td>GET /v3.1/all</td><td>All ~250 countries</td></tr>
+  <tr><td>GET /v3.1/alpha/de</td><td>By ISO country code</td></tr>
+  <tr><td>GET /v3.1/name/france</td><td>By name (partial match)</td></tr>
+  <tr><td>GET /v3.1/region/europe</td><td>By region</td></tr>
+  <tr><td>GET /v3.1/currency/usd</td><td>By currency</td></tr>
+</table>` },
+    { icon:'🐙', title:'GitHub API',
+      tries:['GitHub: octocat','GitHub: repo info'],
+      html:`<p>Public endpoints need no auth. Excellent for real-world pagination and filtering.</p>
+<table>
+  <tr><td>GET /users/{username}</td><td>User profile</td></tr>
+  <tr><td>GET /repos/{owner}/{repo}</td><td>Repository info</td></tr>
+  <tr><td>GET /repos/{owner}/{repo}/issues</td><td>Issues with pagination</td></tr>
+  <tr><td>GET /search/users?q={name}</td><td>Search users</td></tr>
+  <tr><td>GET /search/repositories?q={q}</td><td>Search repos</td></tr>
+</table>` },
+  ]},
+
+  { cat:'🛤️ Learning Roadmap', items:[
+    { icon:'🌱', title:'Beginner  0→40%', desc:'', steps:['1. What is an API?','2. HTTP Protocol Basics','3. HTTP Methods (GET, POST, PUT, DELETE)','4. HTTP Status Codes (200, 404, 500)','5. Practice: JSONPlaceholder (all methods)'] },
+    { icon:'🌿', title:'Intermediate  40→75%', desc:'', steps:['6. Headers & Content-Type','7. JSON & Request Bodies','8. Authentication: API Keys, Bearer/JWT, Basic','9. Query Parameters: filter, paginate, sort','10. Practice: HTTPBin, PokéAPI, GitHub API'] },
+    { icon:'🌳', title:'Advanced  75→100%', desc:'', steps:['11. REST API Design Principles','12. Rate Limiting & Retry Logic','13. GraphQL Basics','14. WebSockets & Real-time APIs','15. Build & document your own REST API'] },
+  ]},
+];
+
+// ── INIT ───────────────────────────────────────────────
+function init() {
+  // Apply saved language
+  document.documentElement.lang = S.lang;
+  document.getElementById('lang-en').classList.toggle('active', S.lang === 'en');
+  document.getElementById('lang-fa').classList.toggle('active', S.lang === 'fa');
+  document.querySelectorAll('[data-t]').forEach(el => {
+    el.textContent = t(el.getAttribute('data-t'));
+  });
+  document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+    el.placeholder = t(el.getAttribute('data-t-placeholder'));
+  });
+  renderSidebar();
+  renderChapter(0);
+  renderExamples();
+  renderDocs('');
+  updateProgress();
+  updateMethodColor();
+  addKV('params-ed','key','value');
+  addKV('headers-ed','Header-Name','value');
+}
+
+// ── SIDEBAR ────────────────────────────────────────────
+function chTitle(ch) { return ch['title_'+S.lang] || ch.title; }
+function chContent(ch) { return ch['content_'+S.lang] || ch.content; }
+
+function renderSidebar() {
+  const el = document.getElementById('sidebar-inner');
+  el.innerHTML = `<div class="sidebar-title">${t('sidebar_title')}</div>`;
+  CHAPTERS.forEach((ch, i) => {
+    const done = S.progress[ch.id];
+    const active = S.chapter === ch.id;
+    const d = document.createElement('div');
+    d.className = 'ch-item' + (active ? ' active' : '') + (done ? ' done' : '');
+    d.onclick = () => { goChapter(ch.id); showSection('learn'); };
+    d.innerHTML = `<div class="ch-num">${done ? '✓' : i+1}</div><div class="ch-label">${chTitle(ch)}</div>`;
+    el.appendChild(d);
+  });
+}
+
+function renderChapter(id) {
+  S.chapter = id;
+  const ch = CHAPTERS.find(c => c.id === id);
+  const prev = CHAPTERS[id - 1];
+  const next = CHAPTERS[id + 1];
+  const wrap = document.getElementById('chapter-content');
+  const isFa = S.lang === 'fa';
+  wrap.innerHTML = chContent(ch) + `
+    <div class="ch-nav">
+      <div>${prev ? `<button class="btn btn-s" onclick="goChapter(${prev.id})">${isFa ? chTitle(prev)+' →' : '← '+chTitle(prev)}</button>` : '<span></span>'}</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        ${!S.progress[id]
+          ? `<button class="btn btn-ok" onclick="markDone(${id})">${t('btn_done')}</button>`
+          : `<span style="color:var(--success);font-size:13px">${t('ch_done_label')}</span>`}
+        ${next
+          ? `<button class="btn btn-p" onclick="goChapter(${next.id})">${isFa ? chTitle(next)+' ←' : 'Next: '+chTitle(next)+' →'}</button>`
+          : `<span style="color:var(--success);font-weight:600">🎉 ${isFa ? 'دوره را تمام کردی!' : 'You finished the course!'}</span>`}
+      </div>
+    </div>`;
+  wrap.querySelectorAll('pre').forEach(pre => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn'; btn.textContent = 'Copy';
+    btn.onclick = () => {
+      navigator.clipboard.writeText(pre.querySelector('code')?.textContent || pre.textContent);
+      btn.textContent = '✓'; setTimeout(() => btn.textContent = 'Copy', 1800);
+    };
+    pre.appendChild(btn);
+  });
+  renderSidebar();
+}
+
+function goChapter(id) {
+  renderChapter(id);
+  document.getElementById('main-content').scrollTop = 0;
+}
+
+function markDone(id) {
+  S.progress[id] = true;
+  localStorage.setItem('alp', JSON.stringify(S.progress));
+  updateProgress();
+  const next = CHAPTERS[id + 1];
+  if (next) goChapter(next.id); else renderChapter(id);
+}
+
+function updateProgress() {
+  const done = Object.keys(S.progress).length;
+  const total = CHAPTERS.length;
+  const pct = Math.round(done / total * 100);
+  document.getElementById('prog-text').textContent = `${done} / ${total}`;
+  document.getElementById('prog-pct').textContent = `${pct}%`;
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+// ── NAV ────────────────────────────────────────────────
+function showSection(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  document.getElementById('sidebar').style.display = name === 'learn' ? '' : 'none';
+}
+
+// ── TESTER TABS ────────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('#section-tester > .tester-grid .tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.getElementById('tab-' + name)?.classList.add('active');
+}
+
+function switchResTab(name) {
+  document.getElementById('rt-body').style.display = name === 'body' ? 'block' : 'none';
+  document.getElementById('rt-hdrs').style.display = name === 'hdrs' ? 'block' : 'none';
+  document.getElementById('rt-body-btn').classList.toggle('active', name === 'body');
+  document.getElementById('rt-hdrs-btn').classList.toggle('active', name === 'hdrs');
+}
+
+// ── KV EDITOR ─────────────────────────────────────────
+function addKV(id, kp, vp) {
+  const ed = document.getElementById(id);
+  const row = document.createElement('div');
+  row.className = 'kv-row';
+  row.innerHTML = `<input class="kv-inp" placeholder="${kp}"><input class="kv-inp" placeholder="${vp}"><button class="kv-del" onclick="this.parentElement.remove()">×</button>`;
+  ed.appendChild(row);
+}
+
+function getKV(id) {
+  const out = {};
+  document.querySelectorAll(`#${id} .kv-row`).forEach(r => {
+    const [k, v] = r.querySelectorAll('.kv-inp');
+    if (k.value.trim()) out[k.value.trim()] = v.value.trim();
+  });
+  return out;
+}
+
+function updateMethodColor() {
+  const sel = document.getElementById('req-method');
+  const map = { GET:'var(--get)', POST:'var(--post)', PUT:'var(--put)', PATCH:'var(--patch)', DELETE:'var(--delete)' };
+  sel.style.color = map[sel.value] || 'var(--text)';
+}
+
+function renderAuthFields() {
+  const authType = document.getElementById('auth-type').value;
+  const f = document.getElementById('auth-fields');
+  const inp = (id, ph, type='text') => `<input class="kv-inp" style="width:100%;margin-bottom:8px" id="${id}" placeholder="${ph}" type="${type}">`;
+  const map = {
+    none: '',
+    bearer: `<div class="field-lbl">Token</div>${inp('ab','eyJhbGciOiJ...')}`,
+    apikey: `<div class="field-lbl">Header Name</div>${inp('akn','X-API-Key')}<div class="field-lbl">Value</div>${inp('akv','your-api-key')}`,
+    basic: `<div class="field-lbl">Username</div>${inp('bau','username')}<div class="field-lbl">Password</div>${inp('bap','password','password')}`
+  };
+  f.innerHTML = map[authType] || '';
+}
+
+// ── SEND REQUEST ───────────────────────────────────────
+async function sendRequest() {
+  const method = document.getElementById('req-method').value;
+  let url = document.getElementById('req-url').value.trim();
+  if (!url) return;
+  if (!/^https?:\/\//.test(url)) url = 'https://' + url;
+
+  const params = getKV('params-ed');
+  if (Object.keys(params).length) url += (url.includes('?') ? '&' : '?') + new URLSearchParams(params);
+
+  const headers = getKV('headers-ed');
+  const auth = document.getElementById('auth-type').value;
+  if (auth === 'bearer') { const tok = document.getElementById('ab')?.value; if (tok) headers['Authorization'] = 'Bearer ' + tok; }
+  if (auth === 'apikey') { const n = document.getElementById('akn')?.value||'X-API-Key'; const v = document.getElementById('akv')?.value; if(v) headers[n]=v; }
+  if (auth === 'basic') { const u = document.getElementById('bau')?.value; const p = document.getElementById('bap')?.value; if(u) headers['Authorization']='Basic '+btoa(u+':'+p); }
+
+  const body = document.getElementById('req-body').value;
+  if (body && !headers['Content-Type']) headers['Content-Type'] = 'application/json';
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = true; btn.innerHTML = `<span class="spinner"></span> ${t('sending')}`;
+
+  const t0 = Date.now();
+  const log = { method, url, headers, body, status:null, duration:null, response:'', resHeaders:{} };
+
+  try {
+    const opts = { method, headers };
+    if (body && ['POST','PUT','PATCH'].includes(method)) opts.body = body;
+
+    const res = await fetch(url, opts);
+    log.duration = Date.now() - t0;
+    log.status = res.status;
+    res.headers.forEach((v, k) => log.resHeaders[k] = v);
+
+    const ct = res.headers.get('content-type') || '';
+    let resText;
+    if (ct.includes('json')) {
+      const json = await res.json();
+      resText = JSON.stringify(json, null, 2);
+      document.getElementById('rt-body').innerHTML = highlight(json);
+    } else {
+      resText = await res.text();
+      document.getElementById('rt-body').textContent = resText;
+    }
+    log.response = resText;
+    document.getElementById('rt-hdrs').textContent = Object.entries(log.resHeaders).map(([k,v])=>`${k}: ${v}`).join('\n');
+    showRes(res.status, log.duration, resText);
+
+  } catch (err) {
+    log.duration = Date.now() - t0; log.status = 0; log.response = err.message;
+    showResError(err.message);
+  } finally {
+    btn.disabled = false; btn.innerHTML = t('send');
+    addLog(log);
+  }
+}
+
+function showRes(status, ms, text) {
+  document.getElementById('res-ph').style.display = 'none';
+  document.getElementById('res-content').style.display = 'block';
+  const badge = document.getElementById('res-badge');
+  const labels = {200:'OK',201:'Created',204:'No Content',400:'Bad Request',401:'Unauthorized',403:'Forbidden',404:'Not Found',429:'Too Many Requests',500:'Internal Server Error',502:'Bad Gateway',503:'Service Unavailable'};
+  badge.textContent = status + ' ' + (labels[status] || '');
+  badge.className = 's-badge ' + (status>=500?'s5':status>=400?'s4':status>=300?'s3':'s2');
+  document.getElementById('res-time').textContent = ms + 'ms';
+  document.getElementById('res-size').textContent = fmt(new TextEncoder().encode(text).length);
+}
+
+function showResError(msg) {
+  document.getElementById('res-ph').style.display = 'none';
+  document.getElementById('res-content').style.display = 'block';
+  const b = document.getElementById('res-badge');
+  b.textContent = 'Network Error'; b.className = 's-badge s4';
+  document.getElementById('res-time').textContent = '';
+  document.getElementById('res-size').textContent = '';
+  document.getElementById('rt-body').textContent = '⚠️ ' + msg + '\n\nSome APIs block browser requests due to CORS.\nTry: jsonplaceholder.typicode.com or httpbin.org';
+}
+
+function highlight(json) {
+  return JSON.stringify(json, null, 2).replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, m => {
+    if (/^"/.test(m)) return /:$/.test(m) ? `<span class="jk">${m}</span>` : `<span class="js">${m}</span>`;
+    if (/true|false/.test(m)) return `<span class="jb">${m}</span>`;
+    if (/null/.test(m)) return `<span class="jnu">${m}</span>`;
+    return `<span class="jn">${m}</span>`;
+  });
+}
+
+function fmt(b) { return b < 1024 ? b + ' B' : b < 1048576 ? (b/1024).toFixed(1) + ' KB' : (b/1048576).toFixed(1) + ' MB'; }
+
+function copyRes() {
+  navigator.clipboard.writeText(document.getElementById('rt-body').textContent);
+}
+
+// ── EXAMPLES ───────────────────────────────────────────
+function renderExamples() {
+  const list = document.getElementById('ex-list');
+  list.innerHTML = '';
+  document.querySelector('.ex-title').textContent = t('ex_title');
+  const mClass = { GET:'bg', POST:'bp', PUT:'bu', PATCH:'bpa', DELETE:'bd' };
+  const groups = [...new Set(EXAMPLES.map(e => e.g))];
+  groups.forEach(g => {
+    const hdr = document.createElement('div');
+    hdr.className = 'ex-group-hdr';
+    hdr.textContent = g;
+    list.appendChild(hdr);
+    EXAMPLES.filter(e => e.g === g).forEach(ex => {
+      const d = document.createElement('div');
+      d.className = 'ex-item';
+      d.onclick = () => loadExample(ex);
+      d.innerHTML = `<div class="ex-name"><span class="badge ${mClass[ex.method]||''}">${ex.method}</span>${ex.name}</div><div class="ex-url">${ex.url.replace(/^https?:\/\//,'')}</div>`;
+      list.appendChild(d);
+    });
+  });
+}
+
+function loadExample(ex) {
+  document.getElementById('req-method').value = ex.method;
+  document.getElementById('req-url').value = ex.url;
+  document.getElementById('req-body').value = ex.body;
+  updateMethodColor();
+  document.getElementById('headers-ed').innerHTML = '';
+  ex.hdrs.forEach(([k,v]) => {
+    addKV('headers-ed','Header-Name','value');
+    const rows = document.querySelectorAll('#headers-ed .kv-row');
+    const last = rows[rows.length-1];
+    last.querySelectorAll('.kv-inp')[0].value = k;
+    last.querySelectorAll('.kv-inp')[1].value = v;
+  });
+  showSection('tester');
+  ex.body ? switchTab('body') : switchTab('params');
+}
+
+function loadExByName(name) {
+  const ex = EXAMPLES.find(e => e.name === name);
+  if (ex) loadExample(ex);
+}
+
+// ── LOG ────────────────────────────────────────────────
+function addLog(entry) {
+  S.logs.unshift(entry);
+  document.getElementById('log-count').textContent = S.logs.length;
+  const container = document.getElementById('log-entries');
+  if (S.logs.length === 1) container.innerHTML = '';
+
+  const mClass = { GET:'bg', POST:'bp', PUT:'bu', PATCH:'bpa', DELETE:'bd' };
+  const sc = entry.status;
+  const scColor = !sc ? 'var(--error)' : sc>=500 ? 'var(--error)' : sc>=400 ? 'var(--error)' : sc>=300 ? 'var(--warning)' : 'var(--success)';
+  const ts = new Date().toLocaleTimeString('en-US', { hour12:false });
+  const lid = 'ld' + Date.now();
+
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `
+    <div class="log-row" onclick="toggleLD('${lid}')">
+      <span class="log-t">${ts}</span>
+      <span class="log-m badge ${mClass[entry.method]||''}">${entry.method}</span>
+      <span class="log-u" title="${esc(entry.url)}">${esc(entry.url)}</span>
+      <span class="log-sc" style="color:${scColor}">${sc||'ERR'}</span>
+      <span class="log-dur">${entry.duration}ms</span>
+    </div>
+    <div class="log-detail" id="${lid}">
+      <strong style="color:var(--text-dim);font-size:11px">REQUEST</strong>
+      <pre>${esc(JSON.stringify({method:entry.method,url:entry.url,headers:entry.headers,body:entry.body||null},null,2))}</pre>
+      <strong style="color:var(--text-dim);font-size:11px;margin-top:8px;display:block">RESPONSE ${sc||'ERROR'}</strong>
+      <pre>${esc((entry.response||'').slice(0,600))}${(entry.response||'').length>600?'\n…(truncated)':''}</pre>
+    </div>`;
+  container.insertBefore(wrap, container.firstChild);
+}
+
+function toggleLD(id) { document.getElementById(id)?.classList.toggle('show'); }
+function toggleLog() {
+  S.logOpen = !S.logOpen;
+  document.getElementById('log-panel').classList.toggle('collapsed', !S.logOpen);
+  document.getElementById('log-chevron').textContent = S.logOpen ? '▼' : '▲';
+}
+function clearLogs() {
+  S.logs = [];
+  document.getElementById('log-count').textContent = '0';
+  document.getElementById('log-entries').innerHTML = '<div style="padding:18px;text-align:center;color:var(--text-muted);font-size:12px">Log cleared.</div>';
+}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── DOCS ───────────────────────────────────────────────
+function renderDocs(filter) {
+  const q = (filter || '').toLowerCase();
+  const out = document.getElementById('docs-body');
+  out.innerHTML = '';
+
+  DOCS.forEach(section => {
+    const items = q
+      ? section.items.filter(i => (i.title + (i.desc||'') + (i.html||'') + (i.steps||[]).join('')).toLowerCase().includes(q))
+      : section.items;
+    if (!items.length) return;
+
+    const catTitle = document.createElement('div');
+    catTitle.className = 'docs-cat-title';
+    catTitle.textContent = section.cat;
+    out.appendChild(catTitle);
+
+    const allWide = items.every(i => i.wide);
+    const grid = document.createElement('div');
+    grid.className = allWide ? 'docs-grid-wide' : 'docs-grid';
+    out.appendChild(grid);
+
+    items.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'doc-card' + (item.wide ? ' wide' : '');
+
+      // Build card inner HTML
+      let inner = `<div class="doc-card-icon">${item.icon}</div><h3>${item.title}</h3>`;
+      if (item.desc) inner += `<p>${item.desc}</p>`;
+
+      // Rich HTML content
+      if (item.html) {
+        inner += `<div class="doc-html">${item.html}</div>`;
+      }
+
+      // Steps list (roadmap)
+      if (item.steps) {
+        inner += '<ul style="margin-top:10px;padding-left:0;list-style:none">' +
+          item.steps.map(s => `<li style="padding:5px 0;border-bottom:1px solid var(--border2);color:var(--text-dim);font-size:13px">${s}</li>`).join('') +
+          '</ul>';
+      }
+
+      // "Try in Tester" buttons
+      if (item.tries && item.tries.length) {
+        inner += `<div class="try-row"><span class="try-lbl">${t('try_label')}</span>` +
+          item.tries.map(t => `<button class="try-btn" onclick="loadExByName('${t.replace(/'/g,"\\'")}')">
+            ${t}</button>`).join('') +
+          '</div>';
+      }
+
+      card.innerHTML = inner;
+      grid.appendChild(card);
+    });
+  });
+
+  if (!out.children.length) {
+    out.innerHTML = `<div style="padding:40px;text-align:center;color:var(--text-muted)">No results for "${esc(filter)}"</div>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
